@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FuteRank | O Placar Profissional do Futevôlei</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #080808;
+      --bg-card: #111111;
+      --bg-card-hover: #161616;
+      --bg-elevated: #1A1A1A;
+      --accent: #B5FF2D;
+      --accent-dim: #8FCC1E;
+      --accent-glow: rgba(181, 255, 45, 0.15);
+      --text-primary: #F2F2F2;
+      --text-secondary: #888888;
+      --text-muted: #444444;
+      --border: #1F1F1F;
+      --border-accent: rgba(181, 255, 45, 0.3);
+      --gold: #FFD166;
+      --silver: #C0C0C0;
+      --bronze: #CD7F32;
+      --danger: #FF4444;
+      --success: #B5FF2D;
+      
+      --font-display: 'Barlow Condensed', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+      position: relative;
+    }
+
+    /* Noise overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    h1, h2, h3, h4, h5, h6, .display-font {
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      line-height: 1.1;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    button {
+      cursor: pointer;
+      font-family: var(--font-body);
+      border: none;
+      background: none;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      color: var(--bg-base);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-dim);
+      box-shadow: 0 0 25px var(--accent-glow);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--bg-elevated);
+      border-color: var(--text-secondary);
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      background-color: var(--bg-card-hover);
+    }
+
+    .card-accent {
+      border-left: 4px solid var(--accent);
+    }
+
+    .card-accent:hover {
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Screen Management */
+    .screen {
+      display: none;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(8px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Navigation */
+    nav {
+      border-bottom: 1px solid var(--border);
+      background-color: var(--bg-base);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 1rem 0;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--text-primary);
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--accent);
+    }
+
+    /* Form Elements */
+    .input-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .input-group input, .input-group select {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-group input:focus, .input-group select:focus {
+      border-color: var(--accent);
+    }
+
+    /* Specific Screens Layouts */
+    
+    /* 1. Landing Page */
+    .hero {
+      text-align: center;
+      padding: 6rem 1rem;
+    }
+    .hero h1 {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+    .hero h1 span {
+      color: var(--accent);
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 2rem auto;
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      padding: 4rem 1rem;
+    }
+
+    /* 3. Dashboard */
+    .dashboard-header {
+      margin: 2rem 0;
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+    }
+    .rating-card {
+      background: linear-gradient(135deg, var(--bg-card), var(--bg-elevated));
+      border: 1px solid var(--border-accent);
+      padding: 2rem;
+      border-radius: 8px;
+    }
+    .rating-value {
+      font-family: var(--font-display);
+      font-size: 4rem;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .recent-matches .match-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .match-row:last-child {
+      border-bottom: none;
+    }
+    .delta-positive { color: var(--success); font-family: var(--font-display); font-size: 1.2rem;}
+    .delta-negative { color: var(--danger); font-family: var(--font-display); font-size: 1.2rem;}
+
+    /* 4. Ranking */
+    .ranking-list {
+      margin-top: 2rem;
+    }
+    .athlete-card {
+      display: flex;
+      align-items: center;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+      padding: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .athlete-card .position-bg {
+      position: absolute;
+      right: 1rem;
+      top: -10px;
+      font-family: var(--font-display);
+      font-size: 120px;
+      color: var(--text-muted);
+      opacity: 0.2;
+      line-height: 1;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .athlete-card .content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .rank-num {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      width: 40px;
+      color: var(--text-secondary);
+    }
+    .rank-1 .rank-num { color: var(--gold); }
+    .rank-2 .rank-num { color: var(--silver); }
+    .rank-3 .rank-num { color: var(--bronze); }
+    
+    .athlete-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex: 1;
+    }
+    .avatar {
+      width: 48px; height: 48px;
+      background-color: var(--bg-elevated);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .athlete-details h3 {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      text-transform: none;
+      color: var(--text-primary);
+    }
+    .athlete-details p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    .athlete-rating {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--text-primary);
+      text-align: right;
+    }
+
+    /* 5. Perfil */
+    .profile-header {
+      display: flex;
+      gap: 2rem;
+      margin-top: 2rem;
+      align-items: flex-start;
+    }
+    .profile-card-img {
+      width: 250px;
+      height: 350px;
+      background-color: var(--bg-card);
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1rem;
+      overflow: hidden;
+      box-shadow: 0 0 30px var(--accent-glow);
+    }
+    .profile-card-img::before {
+      content: "10";
+      position: absolute;
+      top: 10px; left: 10px;
+      font-family: var(--font-display);
+      font-size: 6rem;
+      color: var(--text-muted);
+      opacity: 0.3;
+      line-height: 0.8;
+    }
+    .profile-stats {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .stat-box {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .stat-box.large {
+      grid-column: span 3;
+      border-left: 4px solid var(--accent);
+    }
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* 7. Tabela */
+    .bracket-container {
+      display: flex;
+      gap: 2rem;
+      overflow-x: auto;
+      padding: 2rem 0;
+    }
+    .bracket-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      min-width: 250px;
+    }
+    .match-box {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+    .match-team {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .match-team.winner {
+      color: var(--accent);
+      font-weight: bold;
+    }
+    .match-score {
+      font-family: var(--font-display);
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .profile-header { flex-direction: column; align-items: center; }
+      .hero h1 { font-size: 3rem; }
+      .nav-links { display: none; } /* Simplified for prototype */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav id="mainNav" style="display: none;">
+    <div class="container nav-container">
+      <a href="#" class="logo" onclick="navigateTo('landing')">FUTE<span>RANK</span></a>
+      <div class="nav-links" id="navLinks">
+        <!-- Injected via JS based on login state -->
+      </div>
+    </div>
+  </nav>
+
+  <!-- SCREEN 1: LANDING PAGE -->
+  <main id="screen-landing" class="screen active">
+    <!-- Clean Nav for landing -->
+    <nav style="border-bottom: none;">
+      <div class="container nav-container" style="padding: 1rem 0;">
+        <a href="#" class="logo" onclick="navigateTo('landing')">FUTE<span>RANK</span></a>
+        <div>
+          <button class="btn btn-secondary" style="margin-right: 1rem;" onclick="navigateTo('login')">Entrar</button>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="hero">
+        <div class="badge" style="background-color: var(--bg-elevated); color: var(--accent); margin-bottom: 1rem; border: 1px solid var(--border-accent);">A nova era do Futevôlei</div>
+        <h1>Ranking profissional<br><span>para seu futevôlei</span></h1>
+        <p>Sistema ELO avançado, gestão de campeonatos e design premium. Diga adeus ao caderninho e tabelas em PDF.</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+          <button class="btn btn-primary" onclick="navigateTo('cadastro')">Criar Conta Grátis</button>
+          <button class="btn btn-secondary" onclick="navigateTo('ranking')">Ver Ranking Ao Vivo</button>
+        </div>
+      </div>
+
+      <div class="features">
+        <div class="card card-accent">
+          <h3 style="margin-bottom: 0.5rem; color: var(--text-primary); font-size: 1.5rem;">Matemática Real</h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">Nosso sistema usa a fórmula ELO atualizada a cada set. Resultados surpreendentes contra duplas mais fortes valem mais pontos.</p>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom: 0.5rem; color: var(--text-primary); font-size: 1.5rem;">Para Organizadores</h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">Crie chaves automaticamente, lance resultados pelo celular na beira da quadra e transmita a tabela em tempo real.</p>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom: 0.5rem; color: var(--text-primary); font-size: 1.5rem;">Histórico Impecável</h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">Card de jogador profissional com seu retrospecto, títulos, aproveitamentos de sets e histórico contra adversários.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- SCREEN 2: CADASTRO -->
+  <main id="screen-cadastro" class="screen">
+    <div class="container" style="max-width: 500px; padding-top: 4rem;">
+      <h2 style="text-align: center; font-size: 3rem; margin-bottom: 2rem;">CRIAR <span style="color: var(--accent);">CONTA</span></h2>
+      <div class="card">
+        <div class="input-group">
+          <label>Nome Completo</label>
+          <input type="text" placeholder="João Silva">
+        </div>
+        <div class="input-group">
+          <label>Username</label>
+          <input type="text" placeholder="@joaosilva">
+        </div>
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" placeholder="joao@exemplo.com">
+        </div>
+        <div class="input-group">
+          <label>Senha</label>
+          <input type="password" placeholder="••••••••">
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <div class="input-group" style="flex: 2;">
+            <label>Cidade</label>
+            <input type="text" placeholder="São Paulo">
+          </div>
+          <div class="input-group" style="flex: 1;">
+            <label>UF</label>
+            <input type="text" placeholder="SP" maxlength="2">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Lado Preferido</label>
+          <select>
+            <option>Direito</option>
+            <option>Esquerdo</option>
+            <option>Ambidestro</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="login()">Cadastrar e Ver Meu Dashboard</button>
+        <p style="text-align: center; margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+          Já tem conta? <a href="#" onclick="navigateTo('login')">Fazer login</a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <!-- LOGIN (Auxiliar) -->
+  <main id="screen-login" class="screen">
+    <div class="container" style="max-width: 500px; padding-top: 4rem;">
+      <h2 style="text-align: center; font-size: 3rem; margin-bottom: 2rem;">ACESSE O <span style="color: var(--accent);">FUTERANK</span></h2>
+      <div class="card">
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" placeholder="Seu email">
+        </div>
+        <div class="input-group">
+          <label>Senha</label>
+          <input type="password" placeholder="••••••••">
+        </div>
+        <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="login()">Entrar</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- SCREEN 3: DASHBOARD DO ATLETA -->
+  <main id="screen-dashboard" class="screen">
+    <div class="container">
+      <div class="dashboard-header">
+        <h2 style="font-size: 2.5rem;">E AÍ, <span style="color: var(--accent);">LUCAS B.</span></h2>
+        <p style="color: var(--text-secondary);">Aqui está o resumo da sua carreira.</p>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Col 1 -->
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+          
+          <div class="rating-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <p style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--text-secondary);">Rating atual</p>
+                <div class="rating-value">1342</div>
+                <div class="badge" style="background-color: var(--bg-base); color: #9C27B0; border: 1px solid #9C27B0;">Amador B</div>
+              </div>
+              <div style="text-align: right;">
+                <p style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--text-secondary);">Ranking BR</p>
+                <div style="font-family: var(--font-display); font-size: 2.5rem; color: var(--text-primary);">#412</div>
+              </div>
+            </div>
+            <div style="margin-top: 2rem;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                <span>Amador B</span>
+                <span>Faltam 58 pts para Amador A</span>
+              </div>
+              <div style="height: 4px; background-color: var(--bg-base); border-radius: 2px; overflow: hidden;">
+                <div style="width: 71%; height: 100%; background-color: var(--accent);"></div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+             <h3 style="margin-bottom: 1rem; color: var(--text-primary);">Títulos e Medalhas</h3>
+             <div style="display: flex; gap: 1rem;">
+               <div style="background-color: var(--bg-card); padding: 1rem; border-radius: 4px; flex: 1; text-align: center; border: 1px solid var(--border);">
+                 <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏆</div>
+                 <div style="font-family: var(--font-display); font-size: 1.5rem; color: var(--gold);">1º LUGAR</div>
+                 <div style="font-size: 0.8rem; color: var(--text-secondary);">Open Litoral 2023</div>
+               </div>
+               <div style="background-color: var(--bg-card); padding: 1rem; border-radius: 4px; flex: 1; text-align: center; border: 1px solid var(--border);">
+                 <div style="font-size: 2rem; margin-bottom: 0.5rem;">🥈</div>
+                 <div style="font-family: var(--font-display); font-size: 1.5rem; color: var(--silver);">2º LUGAR</div>
+                 <div style="font-size: 0.8rem; color: var(--text-secondary);">Arena Cup 2024</div>
+               </div>
+             </div>
+          </div>
+
+        </div>
+
+        <!-- Col 2 -->
+        <div class="card recent-matches">
+          <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">Últimas Partidas</h3>
+          
+          <div class="match-row">
+            <div>
+              <p style="font-weight: 500;">Vitória vs. Pedro/Tiago</p>
+              <p style="font-size: 0.8rem; color: var(--text-secondary);">Superliga SP • 18x14</p>
+            </div>
+            <div class="delta-positive">+16</div>
+          </div>
+          
+          <div class="match-row">
+            <div>
+              <p style="font-weight: 500;">Derrota vs. Marcos/João</p>
+              <p style="font-size: 0.8rem; color: var(--text-secondary);">Superliga SP • 16x18</p>
+            </div>
+            <div class="delta-negative">-12</div>
+          </div>
+
+          <div class="match-row">
+            <div>
+              <p style="font-weight: 500;">Vitória vs. Carlos/Vini</p>
+              <p style="font-size: 0.8rem; color: var(--text-secondary);">Superliga SP • 18x10</p>
+            </div>
+            <div class="delta-positive">+22</div>
+          </div>
+
+          <div class="match-row">
+            <div>
+              <p style="font-weight: 500;">Vitória vs. André/Leo</p>
+              <p style="font-size: 0.8rem; color: var(--text-secondary);">Amistoso • 18x15</p>
+            </div>
+            <div class="delta-positive">+10</div>
+          </div>
+          
+          <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" onclick="navigateTo('perfil')">Ver Histórico Completo</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- SCREEN 4: RANKING -->
+  <main id="screen-ranking" class="screen">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin: 2rem 0;">
+        <div>
+          <h2 style="font-size: 3rem;">RANKING <span style="color: var(--accent);">NACIONAL</span></h2>
+          <p style="color: var(--text-secondary);">Os melhores do Brasil, atualizado em tempo real.</p>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <select style="background-color: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); padding: 0.5rem; border-radius: 4px; font-family: var(--font-body);">
+            <option>Todos os Estados</option>
+            <option>SP</option>
+            <option>RJ</option>
+          </select>
+          <select style="background-color: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); padding: 0.5rem; border-radius: 4px; font-family: var(--font-body);">
+            <option>Todas as Categorias</option>
+            <option>Profissional</option>
+            <option>Amador A</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="ranking-list" id="rankingListData">
+        <!-- JS irá preencher isso -->
+      </div>
+    </div>
+  </main>
+
+  <!-- SCREEN 5: PERFIL -->
+  <main id="screen-perfil" class="screen">
+    <div class="container">
+      <div class="profile-header">
+        
+        <!-- Player Card -->
+        <div class="profile-card-img text-center">
+          <div style="flex: 1; display: flex; align-items: center; justify-content: center; font-size: 5rem;">👤</div>
+          <div style="position: relative; z-index: 1;">
+             <h2 style="font-size: 2rem; line-height: 1; margin-bottom: 0.2rem; color: var(--text-primary);">LUCAS B.</h2>
+             <p style="font-size: 0.9rem; color: var(--accent);">@lucasb_fute</p>
+             <div style="display: flex; justify-content: space-between; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+               <div>
+                  <div style="font-size: 0.7rem; color: var(--text-secondary);">RATING</div>
+                  <div style="font-family: var(--font-display); font-size: 1.8rem; color: var(--text-primary);">1342</div>
+               </div>
+               <div style="text-align: right;">
+                  <div style="font-size: 0.7rem; color: var(--text-secondary);">NÍVEL</div>
+                  <div style="font-family: var(--font-display); font-size: 1.2rem; color: var(--text-primary); margin-top: 0.3rem;">AMADOR B</div>
+               </div>
+             </div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="profile-stats">
+          <div class="stat-box large">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+              <div>
+                <h3 style="font-size: 1.5rem; color: var(--text-primary); margin-bottom: 0.2rem;">Estatísticas Gerais</h3>
+                <p style="font-size: 0.9rem; color: var(--text-secondary);">Atleta • Destro • São Paulo, SP</p>
+              </div>
+              <div style="text-align: right;">
+                <div class="stat-label">Vitórias</div>
+                <div style="font-family: var(--font-display); font-size: 2rem; color: var(--success);">68%</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="stat-box">
+             <div class="stat-value">124</div>
+             <div class="stat-label">Partidas</div>
+          </div>
+          <div class="stat-box">
+             <div class="stat-value" style="color: var(--success);">84</div>
+             <div class="stat-label">Vitórias</div>
+          </div>
+          <div class="stat-box">
+             <div class="stat-value" style="color: var(--danger);">40</div>
+             <div class="stat-label">Derrotas</div>
+          </div>
+
+          <div class="stat-box large" style="margin-top: 1rem; border-left-color: var(--text-muted);">
+            <h4 style="margin-bottom: 1rem;">Gráfico de Evolução (Em breve)</h4>
+            <div style="height: 100px; background: repeating-linear-gradient(45deg, var(--bg-card), var(--bg-card) 10px, var(--bg-elevated) 10px, var(--bg-elevated) 20px); opacity: 0.5; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1.2rem; color: var(--text-secondary); border: 1px solid var(--border);">
+               CHART ESPAÇO RESPONSIVO
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- SCREEN 6: CAMPEONATOS LISTA -->
+  <main id="screen-campeonatos" class="screen">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin: 2rem 0;">
+        <div>
+          <h2 style="font-size: 3rem;">TORNEIOS <span style="color: var(--accent);">ABERTOS</span></h2>
+          <p style="color: var(--text-secondary);">Inscreva sua dupla e ganhe pontos no ranking.</p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
+        
+        <div class="card card-accent" style="cursor: pointer;" onclick="navigateTo('campeonato-detalhe')">
+           <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+             <div class="badge" style="background-color: var(--bg-elevated); color: var(--gold); border: 1px solid var(--border);">⭐ OFICIAL FUTERANK</div>
+             <div class="badge" style="background-color: rgba(181, 255, 45, 0.1); color: var(--accent);">INSCRIÇÕES ABERTAS</div>
+           </div>
+           <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Arena Cup SP 2024</h3>
+           <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">📍 São Paulo, SP • Categoria: Amador B/C</p>
+           
+           <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 1rem;">
+             <div>
+               <div style="font-size: 0.8rem; color: var(--text-secondary);">DUPLAS</div>
+               <div style="font-family: var(--font-display); font-size: 1.5rem;">12 <span style="color: var(--text-muted); font-size: 1rem;">/ 16</span></div>
+             </div>
+             <div>
+               <div style="font-size: 0.8rem; color: var(--text-secondary);">DATA</div>
+               <div style="font-weight: 500;">15 Nov 2024</div>
+             </div>
+             <div>
+               <button class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.9rem;">Ver <span style="font-family: sans-serif;">→</span></button>
+             </div>
+           </div>
+        </div>
+
+        <div class="card">
+           <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+             <div class="badge" style="background-color: var(--bg-elevated); color: var(--text-secondary); border: 1px solid var(--border);">MATA MATA</div>
+             <div class="badge" style="background-color: rgba(255, 209, 102, 0.1); color: var(--gold);">EM ANDAMENTO</div>
+           </div>
+           <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Rei da Praia RJ</h3>
+           <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">📍 Rio de Janeiro, RJ • Categoria: Profissional</p>
+           
+           <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 1rem;">
+             <div>
+               <div style="font-size: 0.8rem; color: var(--text-secondary);">DUPLAS</div>
+               <div style="font-family: var(--font-display); font-size: 1.5rem;">8 <span style="color: var(--text-muted); font-size: 1rem;">/ 8</span></div>
+             </div>
+             <div>
+               <div style="font-size: 0.8rem; color: var(--text-secondary);">DATA</div>
+               <div style="font-weight: 500;">10 Nov 2024</div>
+             </div>
+             <div>
+               <button class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.9rem;">Ver <span style="font-family: sans-serif;">→</span></button>
+             </div>
+           </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- SCREEN 7: TABELA DE CAMPEONATO -->
+  <main id="screen-campeonato-detalhe" class="screen">
+    <div class="container">
+      <div style="margin: 2rem 0;">
+        <button onclick="navigateTo('campeonatos')" style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">← Voltar para torneios</button>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div>
+            <div class="badge" style="background-color: var(--bg-elevated); color: var(--gold); border: 1px solid var(--border); margin-bottom: 0.5rem;">⭐ OFICIAL FUTERANK</div>
+            <h2 style="font-size: 3rem;">ARENA CUP SP <span style="color: var(--accent);">2024</span></h2>
+            <p style="color: var(--text-secondary);">São Paulo, SP • Amador B/C</p>
+          </div>
+          <button class="btn btn-primary">Inscrever Minha Dupla</button>
+        </div>
+      </div>
+
+      <!-- Abas falsas -->
+      <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem;">
+         <div style="padding: 1rem 0; border-bottom: 2px solid var(--bg-base); color: var(--text-secondary); cursor: pointer; font-family: var(--font-display); font-size: 1.2rem;">INSCRIÇÕES</div>
+         <div style="padding: 1rem 0; border-bottom: 2px solid var(--accent); color: var(--text-primary); cursor: pointer; font-family: var(--font-display); font-size: 1.2rem;">TABELA (MATA-MATA)</div>
+      </div>
+
+      <div class="bracket-container">
+        
+        <!-- Quartas -->
+        <div class="bracket-col">
+          <h4 style="color: var(--text-secondary); margin-bottom: 1rem; text-align: center;">QUARTAS DE FINAL</h4>
+          
+          <div class="match-box">
+             <div class="match-team winner">
+               <span>Lucas / Thiago</span>
+               <span class="match-score">18</span>
+             </div>
+             <div class="match-team">
+               <span style="color: var(--text-secondary);">Pedro / João</span>
+               <span class="match-score" style="color: var(--text-secondary);">14</span>
+             </div>
+          </div>
+
+          <div class="match-box">
+             <div class="match-team">
+               <span style="color: var(--text-secondary);">Marcos / Gui</span>
+               <span class="match-score" style="color: var(--text-secondary);">16</span>
+             </div>
+             <div class="match-team winner">
+               <span>André / Vini</span>
+               <span class="match-score">18</span>
+             </div>
+          </div>
+          
+          <div class="match-box" style="opacity: 0.5;">
+             <div class="match-team">
+               <span>Felipe / Caio</span>
+               <span class="match-score">-</span>
+             </div>
+             <div class="match-team">
+               <span>Leo / Bruno</span>
+               <span class="match-score">-</span>
+             </div>
+          </div>
+
+          <div class="match-box" style="opacity: 0.5;">
+             <div class="match-team">
+               <span>Alex / Breno</span>
+               <span class="match-score">-</span>
+             </div>
+             <div class="match-team">
+               <span>Dani / Rafael</span>
+               <span class="match-score">-</span>
+             </div>
+          </div>
+        </div>
+
+        <!-- Semis -->
+        <div class="bracket-col">
+          <h4 style="color: var(--text-secondary); margin-bottom: 1rem; text-align: center;">SEMIFINAL</h4>
+          
+          <div class="match-box" style="margin-top: 2rem; margin-bottom: 4rem;">
+             <div class="match-team">
+               <span>Lucas / Thiago</span>
+               <span class="match-score">-</span>
+             </div>
+             <div class="match-team">
+               <span>André / Vini</span>
+               <span class="match-score">-</span>
+             </div>
+          </div>
+
+          <div class="match-box" style="opacity: 0.3; margin-top: 4rem;">
+             <div class="match-team">
+               <span>Vencedor Q3</span>
+               <span class="match-score">-</span>
+             </div>
+             <div class="match-team">
+               <span>Vencedor Q4</span>
+               <span class="match-score">-</span>
+             </div>
+          </div>
+        </div>
+
+        <!-- Final -->
+        <div class="bracket-col">
+          <h4 style="color: var(--gold); margin-bottom: 1rem; text-align: center;">FINAL</h4>
+          
+          <div class="match-box" style="margin-top: 6rem; border-color: var(--gold); box-shadow: 0 0 15px rgba(255, 209, 102, 0.1);">
+             <div class="match-team">
+               <span>Vencedor S1</span>
+               <span class="match-score">-</span>
+             </div>
+             <div class="match-team">
+               <span>Vencedor S2</span>
+               <span class="match-score">-</span>
+             </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- JavaScript for Navigation and Data Injection -->
+  <script>
+    let isLoggedIn = false;
+
+    // Fake Ranking Data
+    const rankingData = [
+      { pos: 1, name: "Victor de Assis", username: "@victor", city: "Santos, SP", rating: 1950, level: "Profissional", color: "#B5FF2D" },
+      { pos: 2, name: "Felipe Freitas", username: "@felipe", city: "Rio de Janeiro, RJ", rating: 1890, level: "Profissional", color: "#B5FF2D" },
+      { pos: 3, name: "Bruno Costa", username: "@bruno", city: "São Paulo, SP", rating: 1720, level: "Profissional", color: "#B5FF2D" },
+      { pos: 4, name: "Carlos Vinícius", username: "@carlosv", city: "Campinas, SP", rating: 1580, level: "Amador A", color: "#FFD166" },
+      { pos: 5, name: "Thiago Silva", username: "@thiago", city: "Santos, SP", rating: 1545, level: "Amador A", color: "#FFD166" },
+      { pos: 6, name: "Lucas B.", username: "@lucasb_fute", city: "São Paulo, SP", rating: 1342, level: "Amador B", color: "#9C27B0" },
+      { pos: 7, name: "João Pedro", username: "@jp", city: "Guarujá, SP", rating: 1210, level: "Amador B", color: "#9C27B0" },
+      { pos: 8, name: "Matheus", username: "@math", city: "Rio de Janeiro, RJ", rating: 1150, level: "Amador C", color: "#2196F3" },
+    ];
+
+    function updateNav() {
+      const nav = document.getElementById('mainNav');
+      const links = document.getElementById('navLinks');
+      
+      if (document.getElementById('screen-landing').classList.contains('active')) {
+        nav.style.display = 'none';
+      } else {
+        nav.style.display = 'block';
+        if (isLoggedIn) {
+          links.innerHTML = `
+            <a href="#" class="nav-link" onclick="navigateTo('dashboard')">Dashboard</a>
+            <a href="#" class="nav-link" onclick="navigateTo('ranking')">Ranking</a>
+            <a href="#" class="nav-link" onclick="navigateTo('campeonatos')">Torneios</a>
+            <a href="#" class="nav-link" onclick="navigateTo('perfil')">Meu Perfil</a>
+            <a href="#" class="nav-link" style="color: var(--danger);" onclick="logout()">Sair</a>
+          `;
+        } else {
+          links.innerHTML = `
+            <a href="#" class="nav-link" onclick="navigateTo('ranking')">Ranking Geral</a>
+            <a href="#" class="nav-link" onclick="navigateTo('login')">Entrar</a>
+            <a href="#" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.9rem;" onclick="navigateTo('cadastro')">Criar Conta</a>
+          `;
+        }
+      }
+    }
+
+    function renderRanking() {
+      const container = document.getElementById('rankingListData');
+      let html = '';
+      
+      rankingData.forEach((athlete) => {
+        let rankClass = `rank-${athlete.pos}`;
+        let badgeStyle = `background-color: var(--bg-elevated); color: ${athlete.color}; border: 1px solid ${athlete.color}44;`;
+        let cardStyle = athlete.pos === 6 ? `border-left: 4px solid var(--accent); background-color: var(--bg-card-hover);` : '';
+
+        html += `
+          <div class="athlete-card ${rankClass}" style="${cardStyle}" onclick="navigateTo('perfil')" style="cursor: pointer;">
+            <div class="position-bg">${athlete.pos}</div>
+            <div class="content">
+              <div class="rank-num">${athlete.pos}°</div>
+              <div class="athlete-info">
+                <div class="avatar">${athlete.name.charAt(0)}</div>
+                <div class="athlete-details">
+                  <h3>${athlete.name}</h3>
+                  <p>${athlete.city} • ${athlete.username}</p>
+                </div>
+              </div>
+              <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+                <div class="badge" style="${badgeStyle}">${athlete.level}</div>
+                <div class="athlete-rating">${athlete.rating}</div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function navigateTo(screenId) {
+      document.querySelectorAll('.screen').forEach(s => {
+        s.classList.remove('active');
+        s.style.animation = 'none';
+        s.offsetHeight; /* trigger reflow */
+        s.style.animation = null; 
+      });
+      document.getElementById('screen-' + screenId).classList.add('active');
+      
+      if(screenId === 'ranking') renderRanking();
+      
+      updateNav();
+      window.scrollTo(0,0);
+    }
+
+    function login() {
+      isLoggedIn = true;
+      navigateTo('dashboard');
+    }
+
+    function logout() {
+      isLoggedIn = false;
+      navigateTo('landing');
+    }
+
+    // Init
+    updateNav();
+  </script>
+</body>
+</html>
