@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { createChampionshipSchema } from "@/lib/validators";
 import { SUPPORTED_TEAM_COUNTS } from "@/lib/constants";
 
-export const metadata = { title: "Novo Campeonato | QuadraHub" };
+
 
 export default function NovoCampeonatoPage() {
   const router = useRouter();
