@@ -21,7 +21,7 @@ export const signUpSchema = z.object({
     .toUpperCase(),
   phone: z.string().optional(),
   role: z.enum(["athlete", "organizer"], {
-    errorMap: () => ({ message: "Selecione: Atleta ou Organizador" }),
+    message: "Selecione: Atleta ou Organizador",
   }),
 });
 
@@ -63,13 +63,13 @@ export const createChampionshipSchema = z.object({
   city: z.string().min(2, "Cidade é obrigatória"),
   state: z.string().length(2, "Estado deve ter 2 letras").toUpperCase(),
   category: z.enum(["amador", "profissional", "misto"], {
-    errorMap: () => ({ message: "Categoria inválida" }),
+    message: "Categoria inválida",
   }),
   format: z.enum(["grupos_mata_mata", "eliminatoria_direta"], {
-    errorMap: () => ({ message: "Formato inválido" }),
+    message: "Formato inválido",
   }),
   max_teams: z.union([z.literal(8), z.literal(12), z.literal(16), z.literal(24)], {
-    errorMap: () => ({ message: "Número de duplas inválido (8, 12, 16 ou 24)" }),
+    message: "Número de duplas inválido (8, 12, 16 ou 24)",
   }),
   start_date: z.string().min(1, "Data de início é obrigatória"),
   end_date: z.string().min(1, "Data de término é obrigatória"),

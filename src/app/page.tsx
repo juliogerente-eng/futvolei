@@ -248,7 +248,7 @@ export default function LandingPage() {
             <span className="text-sm font-bold tracking-widest uppercase">QuadraHub Sys</span>
           </div>
           <p className="text-xs font-mono text-text-muted tracking-widest">
-            V.2.0.1 // {new Date().getFullYear()} // ALL RIGHTS PRESERVED
+            V.2.0.1 {"//"} {new Date().getFullYear()} {"//"} ALL RIGHTS PRESERVED
           </p>
         </div>
       </footer>

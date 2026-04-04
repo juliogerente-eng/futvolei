@@ -29,8 +29,8 @@ export default function ChampionshipManager({
 }) {
   const router = useRouter();
   const [tab, setTab] = useState<Tab>("teams");
-  const [teams, setTeams] = useState(initialTeams);
-  const [matches, setMatches] = useState(initialMatches);
+  const [teams] = useState(initialTeams);
+  const [matches] = useState(initialMatches);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<{ id: string; name: string; email: string }[]>([]);
   const [selectedAthletes, setSelectedAthletes] = useState<string[]>([]);

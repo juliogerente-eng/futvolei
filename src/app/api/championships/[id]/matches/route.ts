@@ -16,7 +16,7 @@ export async function POST(
     const result = submitMatchResultSchema.safeParse(body);
     if (!result.success) {
       return NextResponse.json(
-        { error: result.error.errors[0].message },
+        { error: result.error.issues[0].message },
         { status: 400 }
       );
     }
@@ -140,8 +140,6 @@ export async function POST(
         .update({
           rating: eloResult.ratingAfter,
           level: newLevel.name,
-          wins: won ? profiles.find(p => p.user_id === athleteId)!.rating : undefined,
-          ...(won ? { wins: admin.rpc ? undefined : undefined } : {}),
         })
         .eq("user_id", athleteId);
 
@@ -151,9 +149,6 @@ export async function POST(
         p_new_rating: eloResult.ratingAfter,
         p_new_level: newLevel.name,
         p_won: won,
-      }).then(() => {}).catch(() => {
-        // Fallback: direct update
-        // Will be handled by the SQL function
       });
 
       // Update rating directly

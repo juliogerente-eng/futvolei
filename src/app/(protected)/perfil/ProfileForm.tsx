@@ -22,7 +22,7 @@ export default function ProfileForm({ user }: { user: User }) {
 
     const result = updateProfileSchema.safeParse(formData);
     if (!result.success) {
-      setMessage({ type: "error", text: result.error.errors[0].message });
+      setMessage({ type: "error", text: result.error.issues[0].message });
       setSaving(false);
       return;
     }

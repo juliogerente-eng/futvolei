@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import RankingTable from "@/components/RankingTable";
 import RankingFilters from "./RankingFilters";
+import React from "react";
 
 export const metadata = {
   title: "Ranking | QuadraHub",
@@ -35,9 +36,9 @@ export default async function RankingPage({
     .eq("role", "athlete")
     .not("city", "eq", "");
 
-  const uniqueCities = [
-    ...new Set((cities || []).map((c) => c.city).filter(Boolean)),
-  ].sort();
+  const uniqueCities = Array.from(
+    new Set((cities || []).map((c) => c.city).filter(Boolean))
+  ).sort();
 
   // Format for RankingTable
   const entries = (athletes || []).map((athlete, index) => {
@@ -68,7 +69,9 @@ export default async function RankingPage({
               : "Ranking geral de todos os atletas"}
           </p>
         </div>
-        <RankingFilters cities={uniqueCities} currentCity={params.city} />
+        <React.Suspense fallback={<div className="text-sm text-text-secondary">Carregando filtros...</div>}>
+          <RankingFilters cities={uniqueCities} currentCity={params.city} />
+        </React.Suspense>
       </div>
 
       <RankingTable entries={entries} highlightUserId={user?.id} />
