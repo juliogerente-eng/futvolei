@@ -9,6 +9,7 @@ export const signUpSchema = z.object({
     .string()
     .min(2, "Nome deve ter pelo menos 2 caracteres")
     .max(100, "Nome muito longo"),
+  age: z.string().min(1, "Idade é obrigatória").max(3, "Idade inválida"),
   email: z.string().email("E-mail inválido"),
   password: z
     .string()

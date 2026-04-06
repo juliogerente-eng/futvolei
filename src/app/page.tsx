@@ -1,8 +1,61 @@
+'use client';
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function LandingPage() {
+  const router = useRouter();
+  const [quizAnswered, setQuizAnswered] = useState(false);
+
+  const handleSportSelection = (sport: string) => {
+    router.push(`/cadastro?esporte=${sport}`);
+  };
+
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-[#F5F5F0] overflow-x-hidden font-sans relative">
+      {/* Quiz Overlay */}
+      {!quizAnswered && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0A0A0A]/95 backdrop-blur-md p-6">
+          <div className="max-w-4xl w-full flex flex-col items-center animate-fade-in text-center">
+            <h2 className="text-4xl sm:text-6xl font-black mb-4 tracking-tighter">
+              Qual é a sua <span className="gradient-text-alt">Areia</span>?
+            </h2>
+            <p className="text-gray-400 text-lg sm:text-xl mb-12">
+              Selecione o seu esporte principal para calibrarmos o seu ecossistema no SportHub.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+              {/* Opção: Futevôlei */}
+              <button 
+                onClick={() => handleSportSelection('futevolei')}
+                className="group relative h-64 sm:h-80 w-full rounded-[2rem] overflow-hidden flex flex-col items-center justify-center border-2 border-transparent hover:border-[#E8833A] transition-all duration-300 glass-3d"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#E8833A]/20 to-transparent z-0 group-hover:from-[#E8833A]/40 transition-colors" />
+                <div className="z-10 text-6xl mb-4 group-hover:scale-110 transition-transform">⚽</div>
+                <h3 className="z-10 text-3xl font-black tracking-tight group-hover:text-[#E8833A] text-white transition-colors">Futevôlei</h3>
+              </button>
+              
+              {/* Opção: Beach Tennis */}
+              <button 
+                onClick={() => handleSportSelection('beachtennis')}
+                className="group relative h-64 sm:h-80 w-full rounded-[2rem] overflow-hidden flex flex-col items-center justify-center border-2 border-transparent hover:border-[#8B5CF6] transition-all duration-300 glass-3d"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#8B5CF6]/20 to-transparent z-0 group-hover:from-[#8B5CF6]/40 transition-colors" />
+                <div className="z-10 text-6xl mb-4 group-hover:scale-110 transition-transform">🎾</div>
+                <h3 className="z-10 text-3xl font-black tracking-tight group-hover:text-[#8B5CF6] text-white transition-colors">Beach Tennis</h3>
+              </button>
+            </div>
+            
+            <button 
+              onClick={() => setQuizAnswered(true)}
+              className="mt-12 text-sm text-gray-500 hover:text-white transition-colors underline underline-offset-4"
+            >
+              Apenas explorar o site por enquanto
+            </button>
+          </div>
+        </div>
+      )}
       {/* Dynamic Background Mesh (Futuristic Base) */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden h-full w-full">
         <div
@@ -23,7 +76,7 @@ export default function LandingPage() {
       <nav className="sticky top-4 z-50 mx-4 sm:mx-6 lg:mx-auto max-w-6xl glass-3d rounded-2xl px-2 py-1">
         <div className="px-4 sm:px-6 flex items-center justify-between h-14">
           <span className="text-xl font-bold tracking-tight">
-            <span className="gradient-text">Quadra</span>
+            <span className="gradient-text">Sport</span>
             <span>Hub</span>
           </span>
           <div className="flex items-center gap-3 sm:gap-4">
@@ -60,7 +113,7 @@ export default function LandingPage() {
             </h1>
             
             <p className="max-w-2xl text-lg sm:text-xl text-gray-400 font-light px-4">
-              Sistema de ranking ELO de alta precisão, gestão térmica de torneios e evolução em tempo real.
+              Selecione o seu esporte principal para calibrarmos o seu ecossistema no SportHub.
               Profissionalize hoje seu jogo na areia.
             </p>
 
@@ -104,7 +157,7 @@ export default function LandingPage() {
                     <div className="text-center md:text-left space-y-2">
                       <h3 className="text-2xl sm:text-3xl font-bold tracking-tight">Victor de Assis</h3>
                       <div className="flex items-center justify-center md:justify-start gap-3 text-sm">
-                        <span className="text-gray-500 font-mono">ID: QDHB-992</span>
+                        <span className="text-gray-500 font-mono">ID: SPHB-992</span>
                         <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                         <span className="text-green-500 text-xs font-bold tracking-wider">ONLINE</span>
                       </div>
@@ -188,9 +241,9 @@ export default function LandingPage() {
                 <div className="hidden sm:block absolute top-[32px] left-[15%] right-[15%] h-[2px] bg-gradient-to-r from-transparent via-white/20 to-transparent z-0" />
                 
                 {[
-                  { step: "01", title: "Inicialização", desc: "Registo biométrico e geração de rating ELO base." },
-                  { step: "02", title: "Combate", desc: "Registro em torneios homologados QuadraHub." },
-                  { step: "03", title: "Ascensão", desc: "A cada vitória, seus dados influenciam o ecossistema." },
+                  { step: "01", title: "Inicialização", desc: "Registo biométrico e geração de ranking ELO base." },
+                  { step: "02", title: "Combate", desc: "Registro em torneios homologados SportHub." },
+                  { step: "03", title: "Ascensão", desc: "A cada torneio, destacamos o Melhor Atacante e Defensor para bônus de Ranking extra." },
                 ].map((item) => (
                   <div key={item.step} className="relative z-10 flex flex-col items-center text-center w-full">
                     <div className="w-16 h-16 rounded-xl flex items-center justify-center text-lg font-bold mb-6 glass-3d border border-[#E8833A] bg-black/50">
@@ -232,7 +285,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6 w-full">
           <div className="flex items-center gap-2 opacity-50">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20 M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            <span className="text-sm font-bold tracking-widest uppercase">QuadraHub Sys</span>
+            <span className="text-sm font-bold tracking-widest uppercase">SportHub Sys</span>
           </div>
           <p className="text-xs font-mono text-gray-600 tracking-widest text-center md:text-right">
             V.2.0.1 {"//"} {new Date().getFullYear()} {"//"} ALL RIGHTS PRESERVED

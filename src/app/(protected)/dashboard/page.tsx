@@ -6,7 +6,7 @@ import RatingDelta from "@/components/RatingDelta";
 import DashboardChart from "./DashboardChart";
 
 export const metadata = {
-  title: "Dashboard | QuadraHub",
+  title: "Dashboard | SportHub",
 };
 
 export default async function DashboardPage() {
@@ -54,14 +54,19 @@ export default async function DashboardPage() {
   const recentMatches = (eloHistory || []).slice(0, 10);
 
   const isOrganizer = userData?.role === "organizer";
+  const userSport = user.user_metadata?.primary_sport || 'Futevôlei';
+  const age = user.user_metadata?.age ? `, ${user.user_metadata.age} anos` : '';
 
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold">
-          Olá, {userData?.name?.split(" ")[0] || "Atleta"} 👋
+          Olá, {userData?.name?.split(" ")[0] || "Atleta"}{age} 👋
         </h1>
+        <div className="mt-2 inline-block px-3 py-1 bg-[#E8833A]/10 border border-[#E8833A]/30 rounded-full text-xs font-mono tracking-widest text-[#E8833A] uppercase">
+          {userSport}
+        </div>
         <p className="text-text-secondary text-sm mt-1">
           {isOrganizer
             ? "Gerencie seus campeonatos e acompanhe os resultados."

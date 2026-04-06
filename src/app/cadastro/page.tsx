@@ -1,13 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { signUpSchema, type SignUpInput } from "@/lib/validators";
 
 export default function CadastroPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#0A0A0A] text-[#F5F5F0]">Carregando...</div>}>
+      <CadastroComponent />
+    </Suspense>
+  );
+}
+
+function CadastroComponent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const esporteSelecionado = searchParams.get("esporte") || "Futevôlei";
+
   const [formData, setFormData] = useState<Partial<SignUpInput>>({
     role: "athlete",
   });
@@ -52,6 +63,8 @@ export default function CadastroPage() {
         data: {
           name: validated.name,
           role: validated.role,
+          age: parseInt(validated.age, 10),
+          primary_sport: esporteSelecionado,
         },
       },
     });
@@ -93,11 +106,13 @@ export default function CadastroPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
             <h1 className="text-3xl font-bold">
-              <span className="gradient-text">Quadra</span>
+              <span className="gradient-text">Sport</span>
               <span className="text-text">Hub</span>
             </h1>
           </Link>
-          <p className="text-text-secondary mt-2">Crie sua conta gratuitamente</p>
+          <p className="text-text-secondary mt-2">
+            Criando conta para <span className="font-bold uppercase text-[#E8833A]">{esporteSelecionado}</span>
+          </p>
         </div>
 
         {/* Form Card */}
@@ -163,16 +178,31 @@ export default function CadastroPage() {
               )}
             </div>
 
-            {/* Name */}
-            <InputField
-              label="Nome completo"
-              name="name"
-              type="text"
-              placeholder="Seu nome"
-              value={formData.name || ""}
-              onChange={handleChange}
-              error={errors.name}
-            />
+            {/* Name and Age */}
+            <div className="grid grid-cols-3 gap-3">
+              <div className="col-span-2">
+                <InputField
+                  label="Nome completo"
+                  name="name"
+                  type="text"
+                  placeholder="Seu nome"
+                  value={formData.name || ""}
+                  onChange={handleChange}
+                  error={errors.name}
+                />
+              </div>
+              <div>
+                <InputField
+                  label="Idade"
+                  name="age"
+                  type="number"
+                  placeholder="Sua idade"
+                  value={formData.age || ""}
+                  onChange={handleChange}
+                  error={errors.age}
+                />
+              </div>
+            </div>
 
             {/* Email */}
             <InputField

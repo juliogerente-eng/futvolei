@@ -9,7 +9,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "QuadraHub — Ranking & Campeonatos de Futevôlei",
+  title: "SportHub — Ranking & Campeonatos de Areia",
   description:
     "Plataforma de ranking ELO, campeonatos e gestão para atletas e organizadores de futevôlei no Brasil. Acompanhe sua evolução em tempo real.",
   keywords: [
@@ -21,9 +21,9 @@ export const metadata: Metadata = {
     "areia",
     "Brasil",
   ],
-  authors: [{ name: "QuadraHub" }],
+  authors: [{ name: "SportHub" }],
   openGraph: {
-    title: "QuadraHub — Ranking & Campeonatos de Futevôlei",
+    title: "SportHub — Ranking & Campeonatos de Areia",
     description:
       "Plataforma de ranking ELO, campeonatos e gestão para atletas e organizadores de futevôlei.",
     type: "website",
