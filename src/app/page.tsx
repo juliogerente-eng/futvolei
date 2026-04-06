@@ -26,17 +26,17 @@ export default function LandingPage() {
             <span className="gradient-text">Quadra</span>
             <span>Hub</span>
           </span>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <Link
               href="/login"
-              className="text-sm font-medium transition-colors hover:text-white"
+              className="text-xs sm:text-sm font-medium transition-colors hover:text-white"
               style={{ color: "var(--color-text-secondary)" }}
             >
               Entrar
             </Link>
             <Link
               href="/cadastro"
-              className="btn-3d text-sm font-bold px-5 py-2 rounded-xl"
+              className="btn-3d text-xs sm:text-sm font-bold px-4 py-1.5 sm:px-5 sm:py-2 rounded-xl"
             >
               Criar conta
             </Link>
@@ -46,16 +46,16 @@ export default function LandingPage() {
 
       <main className="relative z-10">
         {/* Hero */}
-        <section className="relative pt-24 pb-20 text-center">
+        <section className="relative pt-12 sm:pt-24 pb-16 sm:pb-20 text-center">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             
-            <div className="inline-flex flex-col items-center gap-6">
+            <div className="inline-flex flex-col items-center gap-10">
               <div className="glass-3d px-5 py-2.5 rounded-full text-sm font-medium animate-slide-up hover:glow-accent transition-all duration-300"
                 style={{ border: "1px solid rgba(139, 92, 246, 0.4)" }}>
                 <span className="gradient-text-alt font-bold tracking-wide uppercase text-xs">Pioneirismo em Futevôlei</span>
               </div>
               
-              <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tighter animate-slide-up" style={{ animationDelay: "100ms" }}>
+              <h1 className="text-4xl sm:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tighter animate-slide-up" style={{ animationDelay: "100ms" }}>
                 RANKING
                 <br />
                 <span className="gradient-text-alt">INTELIGENTE</span>
@@ -95,7 +95,7 @@ export default function LandingPage() {
                 <div className="text-xs font-mono tracking-widest text-text-muted">ELO::TELEMETRY_SYNC</div>
               </div>
               
-              <div className="p-8 sm:p-12 relative overflow-hidden" style={{ background: "var(--color-bg-elevated)" }}>
+              <div className="p-5 sm:p-12 relative overflow-hidden" style={{ background: "var(--color-bg-elevated)" }}>
                 {/* Internal HUD Elements */}
                 <div className="absolute top-0 right-0 p-4 opacity-10">
                   <svg width="120" height="120" viewBox="0 0 100 100"><path fill="none" stroke="currentColor" strokeWidth="1" d="M0 50h100M50 0v100M25 25l50 50M25 75l50-50" /><circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="1"/></svg>
@@ -156,7 +156,7 @@ export default function LandingPage() {
               </h2>
             </div>
             
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-12 lg:gap-16">
               {[
                 {
                   icon: "💠",
@@ -174,8 +174,8 @@ export default function LandingPage() {
                   desc: "Dados de partidas são validados em tempo real, gerando estatísticas de performance absolutas.",
                 },
               ].map((card, i) => (
-                <div key={card.title} className="card-3d p-8 rounded-3xl" style={{ animationDelay: `${i * 150}ms` }}>
-                  <div className="w-16 h-16 rounded-2xl glass-3d flex items-center justify-center text-3xl mb-6 shadow-inner">
+                <div key={card.title} className="card-3d p-6 sm:p-8 rounded-3xl" style={{ animationDelay: `${i * 150}ms` }}>
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl glass-3d flex items-center justify-center text-2xl sm:text-3xl mb-5 sm:mb-6 shadow-inner">
                     {card.icon}
                   </div>
                   <h3 className="text-2xl font-bold mb-4 tracking-tight">{card.title}</h3>
@@ -189,12 +189,12 @@ export default function LandingPage() {
         {/* Step Flow (Holographic) */}
         <section className="py-24 relative">
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
-            <div className="glass-3d rounded-[3rem] p-10 sm:p-16 relative overflow-hidden">
+            <div className="glass-3d rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-16 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-[80px]" />
               
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-16 tracking-tight">O Fluxo de Ascensão</h2>
               
-              <div className="grid sm:grid-cols-3 gap-12 relative">
+              <div className="grid sm:grid-cols-3 gap-16 md:gap-20 relative">
                 {/* Connecting Line */}
                 <div className="hidden sm:block absolute top-[20px] left-[10%] right-[10%] h-[2px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                 
@@ -204,12 +204,12 @@ export default function LandingPage() {
                   { step: "03", title: "Ascensão", desc: "A cada vitória, seus dados influenciam o ecossistema." },
                 ].map((item) => (
                   <div key={item.step} className="relative z-10 flex flex-col items-center text-center group">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center text-sm font-bold mb-6 glass-3d transition-transform duration-500 group-hover:scale-125 group-hover:glow-accent"
+                    <div className="w-16 h-16 rounded-xl flex items-center justify-center text-lg font-bold mb-8 glass-3d transition-transform duration-500 group-hover:scale-125 group-hover:glow-accent"
                       style={{ border: "1px solid var(--color-primary)" }}>
                       <span className="gradient-text-alt">{item.step}</span>
                     </div>
-                    <h3 className="font-bold text-lg mb-3">{item.title}</h3>
-                    <p className="text-sm font-light text-text-secondary">{item.desc}</p>
+                    <h3 className="font-bold text-xl mb-5">{item.title}</h3>
+                    <p className="text-base font-light text-text-secondary leading-relaxed">{item.desc}</p>
                   </div>
                 ))}
               </div>
@@ -220,7 +220,7 @@ export default function LandingPage() {
         {/* CTA Area */}
         <section className="py-32 relative text-center">
           <div className="max-w-3xl mx-auto px-4 relative z-10">
-            <h2 className="text-5xl sm:text-6xl font-black mb-8 tracking-tighter">
+            <h2 className="text-4xl sm:text-6xl font-black mb-6 sm:mb-8 tracking-tighter">
               Eleve seu Jogo.
               <br/>
               <span className="gradient-text-alt">Rompa a Gravidade.</span>
